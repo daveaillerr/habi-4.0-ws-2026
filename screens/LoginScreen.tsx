@@ -14,14 +14,13 @@ import type { RootStackParamList } from '../App';
 
 type LoginScreenProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
-export default function LoginScreen({ route }: LoginScreenProps) {
+export default function LoginScreen({ navigation }: LoginScreenProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const setIsLoggedIn = route.params?.setIsLoggedIn || (() => {});
 
   const handleLogin = () => {
     if (email && password) {
-      setIsLoggedIn(true);
+      navigation.replace('Dashboard');
     }
   };
 

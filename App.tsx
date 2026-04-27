@@ -14,17 +14,20 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    // Simulate app initialization (splash screen duration)
+    // Simulate app initialization (2 second splash/loading screen)
     const timer = setTimeout(() => {
-      setIsLoading(false);
+      setIsReady(true);
     }, 2000);
 
     return () => clearTimeout(timer);
   }, []);
+
+  if (!isReady) {
+    return <LoadingScreen />;
+  }
 
   return (
     <NavigationContainer>
@@ -32,31 +35,11 @@ export default function App() {
         screenOptions={{
           headerShown: false,
           cardStyle: { backgroundColor: '#000000' },
+          animationEnabled: false,
         }}
       >
-        {isLoading ? (
-          <Stack.Screen name="Loading" component={LoadingScreen} />
-        ) : isLoggedIn ? (
-          <Stack.Screen
-            name="Dashboard"
-            component={DashboardScreen}
-            options={{ animationEnabled: false }}
-          />
-        ) : (
-          <Stack.Screen
-            name="Login"
-            component={LoginScreen}
-            listeners={{
-              tabPress: (e) => {
-                e.preventDefault();
-              },
-            }}
-            options={{
-              animationEnabled: isLoading === false,
-            }}
-            initialParams={{ setIsLoggedIn }}
-          />
-        )}
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Dashboard" component={DashboardScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
